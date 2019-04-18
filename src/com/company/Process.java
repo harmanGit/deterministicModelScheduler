@@ -8,7 +8,7 @@ import java.util.Comparator;
  *
  * @author Harman Dhillon (4/18/2019)
  */
-public class Process {
+public class Process{
     double arrivalTime;
     double waitingTime;
     double cpuTime;
@@ -63,10 +63,4 @@ public class Process {
                 ", cpuTime=" + cpuTime +
                 '}';
     }
-
-    public static Comparator<Process> comparatorFCFS = Comparator.comparingDouble(process -> process.arrivalTime);
-
-    public static Comparator<Process> comparatorSRTF = Comparator.comparingDouble(process -> process.cpuTime);
-
-    public static Comparator<Process> comparatorSJF = Comparator.comparingDouble(process -> process.cpuTime);
 }

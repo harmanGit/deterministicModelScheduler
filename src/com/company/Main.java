@@ -1,6 +1,5 @@
 package com.company;
 
-import java.util.PriorityQueue;
 import java.util.Scanner;
 
 /**
@@ -11,10 +10,11 @@ import java.util.Scanner;
 public class Main {
 
     public static void main(String[] args) {
-        PriorityQueue<Process> priorityQueue = new PriorityQueue<>();
-        Process tempProcess = new Process();
-        String rawUserInput = "nothin";
+        String rawUserInput;
         String[] parsedUserInput;
+        SRTF SRTF;
+        SJF SJF;
+        FCFS FCFS;
         Scanner scanner = new Scanner(System.in);
 
         System.out.println("Enter process arrival times and burst lengths.");
@@ -24,14 +24,12 @@ public class Main {
 
         if (parsedUserInput.length % 2 != 0) {
             //parsing user input
-            for (int i = 0; i < parsedUserInput.length; i++)
-                priorityQueue.add(new Process(Double.valueOf(parsedUserInput[i]), Double.valueOf(parsedUserInput[i++])));
+            for (int i = 0; i < parsedUserInput.length; i++){
+
+            }
+
         } else
             System.out.println("Invalid Input: Missing Data!");
-
-        for(Process p : priorityQueue){
-            p.toString();
-        }
 
     }
 }
