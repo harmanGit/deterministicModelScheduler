@@ -55,6 +55,15 @@ public class Process {
         this.cpuTime = cpuTime;
     }
 
+    @Override
+    public String toString() {
+        return "Process{" +
+                "arrivalTime=" + arrivalTime +
+                ", waitingTime=" + waitingTime +
+                ", cpuTime=" + cpuTime +
+                '}';
+    }
+
     public static Comparator<Process> comparatorFCFS = Comparator.comparingDouble(process -> process.arrivalTime);
 
     public static Comparator<Process> comparatorSRTF = Comparator.comparingDouble(process -> process.cpuTime);

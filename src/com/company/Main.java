@@ -22,22 +22,16 @@ public class Main {
         rawUserInput = scanner.nextLine(); //test input: 0 10 3 5 4 2 7 8 8
         parsedUserInput = rawUserInput.split(" ");
 
-        if(parsedUserInput.length % 2 == 0){
+        if (parsedUserInput.length % 2 != 0) {
+            //parsing user input
+            for (int i = 0; i < parsedUserInput.length; i++)
+                priorityQueue.add(new Process(Double.valueOf(parsedUserInput[i]), Double.valueOf(parsedUserInput[i++])));
+        } else
             System.out.println("Invalid Input: Missing Data!");
-            return;
+
+        for(Process p : priorityQueue){
+            p.toString();
         }
 
-        //parsing user input
-        for (int i = 0; i < parsedUserInput.length; i++){
-
-            if((i+1)%2 == 0)
-                tempProcess.setArrivalTime(Double.valueOf(parsedUserInput[i]));//even
-            else
-                tempProcess.setArrivalTime(Double.valueOf(parsedUserInput[i]));//odd
-
-            //priorityQueue.add(new Process(parsedUserInput[i], parsedUserInput[i++]));
-            //new Process();
-        }
-        //while(){};
     }
 }
