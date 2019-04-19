@@ -14,17 +14,27 @@ public class SJF extends Scheduler {
 
     @Override
     void simulation() {
-        PriorityQueue<Process> readyQueue = getReadyQueue();
+        Process previousProcess = new Process();
         Process currentProcess;
-        Process previousProcess;
-        int totalProcess = readyQueue.size();
+        int totalProcess = getInitialCapacity()/2;
         double waitTime = 0;
         double totalWaitTime = 0;
-        double averageWaitTime = 0;
+        double averageWaitTime;
+        System.err.println(getInitialCapacity());
 
-        while (!readyQueue.isEmpty()) {
-            previousProcess = readyQueue.poll();//looking at previous process
-            currentProcess = readyQueue.peek();//getting the first process
+
+        for (int i = 0; i < getInitialCapacity(); i++) {
+            if(i != 0)
+                addToReadyQueue(new Process(Character.toString((char) ('A' + i)), Double.valueOf(getParsedUserInput()[i]), 0.0, Double.valueOf(getParsedUserInput()[++i])));
+            else
+                previousProcess = new Process(Character.toString((char) ('A' + i)), Double.valueOf(getParsedUserInput()[i]), 0.0, Double.valueOf(getParsedUserInput()[++i]));
+        }
+        
+        while (!isEmptyReadyQueue()) {
+            if(waitTime != 0){
+                previousProcess = pollReadyQueue();
+            }
+            currentProcess = peekReadyQueue();//getting the first process
 
             if (currentProcess != null) {
                 waitTime = waitTime + (previousProcess.cpuTime +
@@ -42,12 +52,13 @@ public class SJF extends Scheduler {
 
     @Override
     void execute() {
-
-//        printReadyQueue();
+        //printReadyQueue();
         simulation();
     }
 
-    @Override
+
+
+
     Comparator<Process> comparator() {
         return Comparator.comparingDouble(process -> process.cpuTime);
     }

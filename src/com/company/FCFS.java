@@ -35,16 +35,11 @@ public class FCFS extends Scheduler {
 
                     currentProcess.setWaitingTime(waitTime);
                     addToReadyQueue(currentProcess);
-//                    System.err.println("p: " + previousProcess.toString());
-//                    System.err.println("c: " + currentProcess.toString());
-//                    System.err.println("");
                 }
             } else
                 addToReadyQueue(new Process(Character.toString((char) ('A' + i)), Double.valueOf(getParsedUserInput()[i]), 0.0, Double.valueOf(getParsedUserInput()[++i])));
 
-//            System.err.println("BEFORE: " + totalWaitTime);
             totalWaitTime += waitTime;
-//            System.err.println("After: " + totalWaitTime);
 
         }
         System.out.println("FCFS: ");

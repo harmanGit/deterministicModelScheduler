@@ -11,6 +11,33 @@ import java.util.PriorityQueue;
  */
 public abstract class Scheduler {
     private PriorityQueue<Process> readyQueue;
+    private String[] parsedUserInput;
+    private int initialCapacity;
+
+    public Scheduler(String[] parsedUserInput) {
+        this.parsedUserInput = parsedUserInput;
+        this.initialCapacity = parsedUserInput.length;
+        this.readyQueue = new PriorityQueue<>(initialCapacity, comparator());
+    }
+
+//    public PriorityQueue<Process> getReadyQueue() {
+//    return readyQueue;
+//}
+//
+//    public void printReadyQueue(){
+//        for (Process singleProcess : readyQueue){
+//            System.out.println(singleProcess.toString() + ", ");
+//        }
+//    }
+
+    public PriorityQueue<Process> getReadyQueue() {
+        return readyQueue;
+    }
+
+    public void setReadyQueue(PriorityQueue<Process> readyQueue) {
+        this.readyQueue = readyQueue;
+    }
+
 
     public String[] getParsedUserInput() {
         return parsedUserInput;
@@ -20,30 +47,6 @@ public abstract class Scheduler {
         return initialCapacity;
     }
 
-    private String[] parsedUserInput;
-    private int initialCapacity;
-
-    public Scheduler(String[] parsedUserInput) {
-        this.parsedUserInput = parsedUserInput;
-        this.initialCapacity = parsedUserInput.length;
-        this.readyQueue = new PriorityQueue<>(initialCapacity, defaultComparator());
-    }
-
-    public Scheduler(String[] parsedUserInput,  Comparator<Process> comparator) {
-        this.parsedUserInput = parsedUserInput;
-        this.initialCapacity = parsedUserInput.length;
-        this.readyQueue = new PriorityQueue<>(initialCapacity, comparator);
-    }
-
-    public PriorityQueue<Process> getReadyQueue() {
-    return readyQueue;
-}
-
-    public void printReadyQueue(){
-        for (Process singleProcess : readyQueue){
-            System.out.println(singleProcess.toString() + ", ");
-        }
-    }
     public boolean isEmptyReadyQueue(){return readyQueue.isEmpty();}
 
     public void addToReadyQueue(Process process){readyQueue.add(process);}

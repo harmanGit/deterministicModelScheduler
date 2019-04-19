@@ -24,12 +24,12 @@ public class Main {
 
         if (parsedUserInput.length % 2 == 0) {
 //            SRTF = new SRTF(parsedUserInput);
-//            SJF = new SJF(parsedUserInput);
-            FCFS = new FCFS(parsedUserInput);
+            SJF = new SJF(parsedUserInput);
+//            FCFS = new FCFS(parsedUserInput);
 
 //            SRTF.execute();
-//            SJF.execute();
-            FCFS.execute();
+            SJF.execute();
+//            FCFS.execute();
         } else
             System.out.println("Invalid Input: Missing Data!");
 
