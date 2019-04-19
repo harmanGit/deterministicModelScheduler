@@ -12,6 +12,12 @@ public class SRTF extends Scheduler {
     }
 
     @Override
+    void simulation() {
+
+
+    }
+
+    @Override
     void execute() {
         populateReadyQueue();
 //        printReadyQueue();

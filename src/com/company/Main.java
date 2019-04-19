@@ -19,10 +19,10 @@ public class Main {
 
         System.out.println("Enter process arrival times and burst lengths.");
 
-        rawUserInput = scanner.nextLine(); //test input: 0 10 3 5 4 2 7 8 8
+        rawUserInput = scanner.nextLine(); //test input: 1 8 2 5 3 5 4 2
         parsedUserInput = rawUserInput.split(" ");
 
-        if (parsedUserInput.length % 2 != 0) {
+        if (parsedUserInput.length % 2 == 0) {
             SRTF = new SRTF(parsedUserInput);
             SJF = new SJF(parsedUserInput);
             FCFS = new FCFS(parsedUserInput);

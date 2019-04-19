@@ -20,10 +20,20 @@ public abstract class Scheduler {
 
     }
 
+    public PriorityQueue<Process> getReadyQueue() {
+        return readyQueue;
+    }
+
     public void populateReadyQueue(){
-        this.readyQueue = new PriorityQueue<>(initialCapacity, comparator());
+        this.readyQueue = new PriorityQueue<>(initialCapacity, defaultComparator());
         for (int i = 0; i < parsedUserInput.length; i++)
-            readyQueue.add(new Process(Character.toString((char) ('A' + i)), Double.valueOf(parsedUserInput[i]), Double.valueOf(parsedUserInput[i++])));
+            readyQueue.add(new Process(Character.toString((char) ('A' + i)), Double.valueOf(parsedUserInput[i]), Double.valueOf(parsedUserInput[++i])));
+    }
+
+    public void populateReadyQueue(Comparator<Process> comparator){
+        this.readyQueue = new PriorityQueue<>(initialCapacity, comparator);
+        for (int i = 0; i < parsedUserInput.length; i++)
+            readyQueue.add(new Process(Character.toString((char) ('A' + i)), Double.valueOf(parsedUserInput[i]), Double.valueOf(parsedUserInput[++i])));
     }
 
     public void printReadyQueue(){
@@ -32,16 +42,20 @@ public abstract class Scheduler {
         }
     }
 
-    public void simulation(){
-        Process tempProcess = new Process();
-        double totalWaitTime = 0;
-        double averageWaitTime = 0;
-        while(!readyQueue.isEmpty()){
-            tempProcess = readyQueue.poll();
-            //totalWaitTime+=tempProcess.cpuTime
-            for (int i = 0; i < tempProcess.cpuTime; i++){}
-        }
-    }
+//    public void simulation(){
+//        Process tempProcess = new Process();
+//        double totalWaitTime = 0;
+//        double averageWaitTime = 0;
+//        while(!readyQueue.isEmpty()){
+//            tempProcess = readyQueue.poll();
+//            //totalWaitTime+=tempProcess.cpuTime
+//            for (int i = 0; i < tempProcess.cpuTime; i++){}
+//        }
+//    }
+
+    private Comparator<Process> defaultComparator(){return Comparator.comparingDouble(process -> process.arrivalTime);}
+
+    abstract void simulation();
 
     abstract void execute();
 
