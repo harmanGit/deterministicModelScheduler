@@ -9,23 +9,27 @@ import java.util.Comparator;
  * @author Harman Dhillon (4/18/2019)
  */
 public class Process{
+    String processID;
     double arrivalTime;
     double waitingTime;
     double cpuTime;
 
     public Process() {
+        this.processID = "";
         this.arrivalTime = 0;
         this.waitingTime = 0;
         this.cpuTime = 0;
     }
 
-    public Process(double arrivalTime, double cpuTime) {
+    public Process(String processID, double arrivalTime, double cpuTime) {
+        this.processID = processID;
         this.arrivalTime = arrivalTime;
         this.cpuTime = cpuTime;
         this.waitingTime = 0;
     }
 
-    public Process(double arrivalTime, double waitingTime, double cpuTime) {
+    public Process(String processID, double arrivalTime, double waitingTime, double cpuTime) {
+        this.processID = processID;
         this.arrivalTime = arrivalTime;
         this.waitingTime = waitingTime;
         this.cpuTime = cpuTime;
@@ -58,7 +62,8 @@ public class Process{
     @Override
     public String toString() {
         return "Process{" +
-                "arrivalTime=" + arrivalTime +
+                "processID='" + processID + '\'' +
+                ", arrivalTime=" + arrivalTime +
                 ", waitingTime=" + waitingTime +
                 ", cpuTime=" + cpuTime +
                 '}';

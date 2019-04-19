@@ -23,13 +23,16 @@ public class Main {
         parsedUserInput = rawUserInput.split(" ");
 
         if (parsedUserInput.length % 2 != 0) {
-            //parsing user input
-            for (int i = 0; i < parsedUserInput.length; i++){
+            SRTF = new SRTF(parsedUserInput);
+            SJF = new SJF(parsedUserInput);
+            FCFS = new FCFS(parsedUserInput);
 
-            }
-
+            SRTF.execute();
+            SJF.execute();
+            FCFS.execute();
         } else
             System.out.println("Invalid Input: Missing Data!");
+
 
     }
 }
