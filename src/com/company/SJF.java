@@ -42,7 +42,7 @@ public class SJF extends Scheduler {
 
     @Override
     void execute() {
-        populateReadyQueue();
+
 //        printReadyQueue();
         simulation();
     }

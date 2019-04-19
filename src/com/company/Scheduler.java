@@ -11,47 +11,46 @@ import java.util.PriorityQueue;
  */
 public abstract class Scheduler {
     private PriorityQueue<Process> readyQueue;
+
+    public String[] getParsedUserInput() {
+        return parsedUserInput;
+    }
+
+    public int getInitialCapacity() {
+        return initialCapacity;
+    }
+
     private String[] parsedUserInput;
     private int initialCapacity;
 
     public Scheduler(String[] parsedUserInput) {
         this.parsedUserInput = parsedUserInput;
         this.initialCapacity = parsedUserInput.length;
+        this.readyQueue = new PriorityQueue<>(initialCapacity, defaultComparator());
+    }
 
+    public Scheduler(String[] parsedUserInput,  Comparator<Process> comparator) {
+        this.parsedUserInput = parsedUserInput;
+        this.initialCapacity = parsedUserInput.length;
+        this.readyQueue = new PriorityQueue<>(initialCapacity, comparator);
     }
 
     public PriorityQueue<Process> getReadyQueue() {
-        return readyQueue;
-    }
-
-    public void populateReadyQueue(){
-        this.readyQueue = new PriorityQueue<>(initialCapacity, defaultComparator());
-        for (int i = 0; i < parsedUserInput.length; i++)
-            readyQueue.add(new Process(Character.toString((char) ('A' + i)), Double.valueOf(parsedUserInput[i]), Double.valueOf(parsedUserInput[++i])));
-    }
-
-    public void populateReadyQueue(Comparator<Process> comparator){
-        this.readyQueue = new PriorityQueue<>(initialCapacity, comparator);
-        for (int i = 0; i < parsedUserInput.length; i++)
-            readyQueue.add(new Process(Character.toString((char) ('A' + i)), Double.valueOf(parsedUserInput[i]), Double.valueOf(parsedUserInput[++i])));
-    }
+    return readyQueue;
+}
 
     public void printReadyQueue(){
         for (Process singleProcess : readyQueue){
             System.out.println(singleProcess.toString() + ", ");
         }
     }
+    public boolean isEmptyReadyQueue(){return readyQueue.isEmpty();}
 
-//    public void simulation(){
-//        Process tempProcess = new Process();
-//        double totalWaitTime = 0;
-//        double averageWaitTime = 0;
-//        while(!readyQueue.isEmpty()){
-//            tempProcess = readyQueue.poll();
-//            //totalWaitTime+=tempProcess.cpuTime
-//            for (int i = 0; i < tempProcess.cpuTime; i++){}
-//        }
-//    }
+    public void addToReadyQueue(Process process){readyQueue.add(process);}
+
+    public Process pollReadyQueue(){return readyQueue.poll();}
+
+    public Process peekReadyQueue(){return readyQueue.peek();}
 
     private Comparator<Process> defaultComparator(){return Comparator.comparingDouble(process -> process.arrivalTime);}
 

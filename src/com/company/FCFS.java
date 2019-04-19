@@ -7,43 +7,53 @@ import java.util.PriorityQueue;
  * @author Harman Dhillon (4/18/2019)
  */
 public class FCFS extends Scheduler {
-
     public FCFS(String[] parsedUserInput) {
         super(parsedUserInput);
     }
 
     @Override
     void simulation() {
-        PriorityQueue<Process> readyQueue = getReadyQueue();
-        Process currentProcess;
         Process previousProcess;
-        int totalProcess = readyQueue.size();
+        Process currentProcess;
+        int totalProcess = getInitialCapacity();
         double waitTime = 0;
         double totalWaitTime = 0;
-        double averageWaitTime = 0;
+        double averageWaitTime;
+        System.err.println(getInitialCapacity());
 
-        while (!readyQueue.isEmpty()) {
-            previousProcess = readyQueue.poll();//looking at previous process
-            currentProcess = readyQueue.peek();//getting the first process
 
-            if (currentProcess != null) {
-                waitTime = waitTime + (previousProcess.cpuTime +
-                        (previousProcess.arrivalTime - currentProcess.arrivalTime));
+        for (int i = 0; i < getInitialCapacity(); i++) {
 
-                //set wait time for the process using a setter : currentProcess.setWaitingTime()
+            if(i != 0)
+            {
+                currentProcess = new Process(Character.toString((char) ('A' + i)), Double.valueOf(getParsedUserInput()[i]), 0.0, Double.valueOf(getParsedUserInput()[++i]));
+                if(!isEmptyReadyQueue()) {
+                    previousProcess = pollReadyQueue();
 
-                totalWaitTime += waitTime;
-            }
+                    waitTime = previousProcess.waitingTime + (previousProcess.cpuTime -
+                            (currentProcess.arrivalTime - previousProcess.arrivalTime));
+
+                    currentProcess.setWaitingTime(waitTime);
+                    addToReadyQueue(currentProcess);
+//                    System.err.println("p: " + previousProcess.toString());
+//                    System.err.println("c: " + currentProcess.toString());
+//                    System.err.println("");
+                }
+            } else
+                addToReadyQueue(new Process(Character.toString((char) ('A' + i)), Double.valueOf(getParsedUserInput()[i]), 0.0, Double.valueOf(getParsedUserInput()[++i])));
+
+//            System.err.println("BEFORE: " + totalWaitTime);
+            totalWaitTime += waitTime;
+//            System.err.println("After: " + totalWaitTime);
+
         }
         System.out.println("FCFS: ");
-        averageWaitTime = totalWaitTime / totalProcess;
+        averageWaitTime = totalWaitTime / 4.0;
         System.out.println("Average Waiting Time: " + averageWaitTime);
     }
-
-
+    
     @Override
     void execute() {
-        populateReadyQueue();
         //printReadyQueue();
         simulation();
     }

@@ -19,12 +19,12 @@ public class SRTF extends Scheduler {
 
     @Override
     void execute() {
-        populateReadyQueue();
+
 //        printReadyQueue();
     }
 
     @Override
     Comparator<Process> comparator() {
-        return Comparator.comparingDouble(process -> process.cpuTime);
+        return Comparator.comparingDouble(process -> process.cpuTime);//cahnage this to wait time
     }
 }
