@@ -15,7 +15,7 @@ public class FCFS extends Scheduler {
     void simulation() {
         Process previousProcess;
         Process currentProcess;
-        int totalProcess = getInitialCapacity();
+        int totalProcess = getInitialCapacity()/2;
         double waitTime = 0;
         double totalWaitTime = 0;
         double averageWaitTime;
@@ -48,10 +48,10 @@ public class FCFS extends Scheduler {
 
         }
         System.out.println("FCFS: ");
-        averageWaitTime = totalWaitTime / 4.0;
+        averageWaitTime = totalWaitTime / totalProcess;
         System.out.println("Average Waiting Time: " + averageWaitTime);
     }
-    
+
     @Override
     void execute() {
         //printReadyQueue();
