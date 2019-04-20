@@ -16,71 +16,43 @@ public class FCFS extends Scheduler {
     void simulation() {
         Process process;
         int currentTime = 0;
+        int letterCounter = 0;
+        double totalWaitTime = 0;
+        double averageWaitTime;
         double waitTime = 0;
 
         while(!isEmptyUserInputQueue()){
+            if(Integer.parseInt(peekUserInputQueue()) == currentTime) {
 
-            if(waitTime != 0) {
-                process = new Process(Character.toString((char) ('A' + currentTime)), Double.valueOf(pollUserInputQueue()), Double.valueOf(pollUserInputQueue()));
-                process.setWaitingTime(waitTime);
-                waitTime = waitTime + process.getCpuTime();
+                if(waitTime != 0) {
+                    process = new Process(Character.toString((char) ('A' + letterCounter++)), Double.valueOf(pollUserInputQueue()), Double.valueOf(pollUserInputQueue()));
+                    process.setWaitingTime(waitTime);
+                    totalWaitTime = totalWaitTime + waitTime;
+                    waitTime = waitTime + process.getCpuTime();
 
-            }else {
-                process = new Process(Character.toString((char) ('A' + currentTime)), Double.valueOf(pollUserInputQueue()),waitTime,Double.valueOf(pollUserInputQueue()));
-                waitTime = process.getCpuTime();
-            }
+                }else {
+                    process = new Process(Character.toString((char) ('A' + letterCounter++)), Double.valueOf(pollUserInputQueue()),waitTime,Double.valueOf(pollUserInputQueue()));
+                    waitTime = process.getCpuTime();
+                }
 
-            System.err.println(process.toString());
-
-//            System.err.println("Process ArrivalTime: " + process.getArrivalTime());
-//            System.err.println("Process currentTime: " + currentTime);
-            if(process.getArrivalTime() == currentTime) {
-                System.err.println("Current Time: " + currentTime);
-
+                System.err.println(process.toString());
+                System.err.println(totalWaitTime);
                 addToReadyQueue(process);
-            }
 
-            if(!isEmptyReadyQueue()){
-                if(currentTime >= peekReadyQueue().getWaitingTime())
-                    pollReadyQueue();
+                if(!isEmptyReadyQueue()){
+                    if(currentTime >= peekReadyQueue().getWaitingTime())
+                        pollReadyQueue();
+                }
+
+                waitTime--;
             }
 
             currentTime++;
-            waitTime--;
         }
 
 
-//        Process previousProcess;
-//        Process process;
-//        int totalProcess = getInitialCapacity()/2;
-//        double waitTime = 0;
-//        double totalWaitTime = 0;
-        double averageWaitTime = 0.0;
-//        System.err.println(getInitialCapacity());
-//
-//
-//        for (int i = 0; i < getInitialCapacity(); i++) {
-//
-//            if(i != 0)
-//            {
-//                process = new Process(Character.toString((char) ('A' + i)), Double.valueOf(getParsedUserInput()[i]), 0.0, Double.valueOf(getParsedUserInput()[++i]));
-//                if(!isEmptyReadyQueue()) {
-//                    previousProcess = pollReadyQueue();
-//
-//                    waitTime = previousProcess.waitingTime + (previousProcess.cpuTime -
-//                            (process.arrivalTime - previousProcess.arrivalTime));
-//
-//                    process.setWaitingTime(waitTime);
-//                    addToReadyQueue(process);
-//                }
-//            } else
-//                addToReadyQueue(new Process(Character.toString((char) ('A' + i)), Double.valueOf(getParsedUserInput()[i]), 0.0, Double.valueOf(getParsedUserInput()[++i])));
-//
-//            totalWaitTime += waitTime;
-//
-//        }
         System.out.println("FCFS: ");
-        averageWaitTime = currentTime / 4.0;
+        averageWaitTime = totalWaitTime / (getInitialCapacity()/2);//pairs of two
         System.out.println("Average Waiting Time: " + averageWaitTime);
     }
 
