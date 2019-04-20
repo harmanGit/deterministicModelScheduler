@@ -15,38 +15,52 @@ public class SJF extends Scheduler {
 
     @Override
     void simulation() {
-//        Process previousProcess = new Process();
-//        Process currentProcess;
-//        int totalProcess = getInitialCapacity()/2;
-//        double waitTime = 0;
-//        double totalWaitTime = 0;
-//        double averageWaitTime;
-//
-//        for (int i = 0; i < getInitialCapacity(); i++) {
-//            if(i != 0)
-//                addToReadyQueue(new Process(Character.toString((char) ('A' + i)), Double.valueOf(getParsedUserInput()[i]), 0.0, Double.valueOf(getParsedUserInput()[++i])));
-//            else
-//                previousProcess = new Process(Character.toString((char) ('A' + i)), Double.valueOf(getParsedUserInput()[i]), 0.0, Double.valueOf(getParsedUserInput()[++i]));
-//        }
-//
-//        while (!isEmptyReadyQueue()) {
-//            if(waitTime != 0){
-//                previousProcess = pollReadyQueue();
-//            }
-//            currentProcess = peekReadyQueue();//getting the first process
-//
-//            if (currentProcess != null) {
-//                waitTime = waitTime + (previousProcess.cpuTime +
-//                        (previousProcess.arrivalTime - currentProcess.arrivalTime));
-//
-//                //set wait time for the process using a setter : currentProcess.setWaitingTime()
-//
-//                totalWaitTime += waitTime;
-//            }
-//        }
-//        System.out.println("SJF: ");
-//        averageWaitTime = totalWaitTime / totalProcess;
-//        System.out.println("Average Waiting Time: " + averageWaitTime);
+        System.err.println("asdfasdf: " + peekUserInputQueue());
+        PriorityQueue<Process> tempProcessQueue = new PriorityQueue<>(getTotalQueueSize(), comparator());
+        Process process;
+        int currentTime = 0;
+        int letterCounter = 0;
+        double totalWaitTime = 0;
+        double averageWaitTime;
+        double waitTime = 0;
+
+        while (true) {
+            if (!isEmptyUserInputQueue() && Integer.parseInt(peekUserInputQueue()) == currentTime) {
+                process = new Process(Character.toString((char) ('A' + letterCounter++)),
+                        Double.valueOf(pollUserInputQueue()), Double.valueOf(pollUserInputQueue()));
+                if (waitTime != 0) {
+                    tempProcessQueue.add(process);
+                } else {
+                    addToReadyQueue(process);
+                    waitTime = process.getCpuTime();
+                }
+            }
+
+            if (!isEmptyReadyQueue() && peekReadyQueue().getCpuTime() != 0) {//computing
+                compute();
+                if(!tempProcessQueue.isEmpty()){//wait time increase
+                    for (Process p : tempProcessQueue)
+                        p.setWaitingTime(p.getWaitingTime() + 1);
+                }
+            } else if (!isEmptyReadyQueue() && peekReadyQueue().getCpuTime() == 0) {
+                //System.err.println(pollReadyQueue().toString());//remove to normal poll
+                process = pollReadyQueue();
+                totalWaitTime += process.getWaitingTime();
+                // set total wait time
+            }
+            if (isEmptyReadyQueue() && !tempProcessQueue.isEmpty()) {//moving temp q to ready q
+                addToReadyQueue(tempProcessQueue.poll());
+            }
+
+            if(isEmptyUserInputQueue() && isEmptyReadyQueue() && tempProcessQueue.isEmpty())
+                break;
+
+            currentTime++;
+        }
+
+        System.out.println("SJF: ");
+        averageWaitTime = totalWaitTime / getTotalQueueSize();
+        System.out.println("Average Waiting Time: " + averageWaitTime);
     }
 
     @Override
@@ -55,6 +69,6 @@ public class SJF extends Scheduler {
     }
 
     Comparator<Process> comparator() {
-        return Comparator.comparingDouble(process -> process.getCpuTime());
+        return Comparator.comparingDouble(Process::getCpuTime);
     }
 }

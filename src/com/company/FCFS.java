@@ -14,6 +14,9 @@ public class FCFS extends Scheduler {
 
     @Override
     void simulation() {
+        System.err.println("asdfasdf: " + peekUserInputQueue());
+
+        PriorityQueue<Process> tempProcessQueue = new PriorityQueue<>(getTotalQueueSize(), comparator());
         Process process;
         int currentTime = 0;
         int letterCounter = 0;
@@ -21,38 +24,41 @@ public class FCFS extends Scheduler {
         double averageWaitTime;
         double waitTime = 0;
 
-        while(!isEmptyUserInputQueue()){
-            if(Integer.parseInt(peekUserInputQueue()) == currentTime) {
-
-                if(waitTime != 0) {
-                    process = new Process(Character.toString((char) ('A' + letterCounter++)), Double.valueOf(pollUserInputQueue()), Double.valueOf(pollUserInputQueue()));
-                    process.setWaitingTime(waitTime);
-                    totalWaitTime = totalWaitTime + waitTime;
-                    waitTime = waitTime + process.getCpuTime();
-
-                }else {
-                    process = new Process(Character.toString((char) ('A' + letterCounter++)), Double.valueOf(pollUserInputQueue()),waitTime,Double.valueOf(pollUserInputQueue()));
+        while (true) {
+            if (!isEmptyUserInputQueue() && Integer.parseInt(peekUserInputQueue()) == currentTime) {
+                process = new Process(Character.toString((char) ('A' + letterCounter++)),
+                        Double.valueOf(pollUserInputQueue()), Double.valueOf(pollUserInputQueue()));
+                if (waitTime != 0) {
+                    tempProcessQueue.add(process);
+                } else {
+                    addToReadyQueue(process);
                     waitTime = process.getCpuTime();
                 }
-
-                System.err.println(process.toString());
-                System.err.println(totalWaitTime);
-                addToReadyQueue(process);
-
-                if(!isEmptyReadyQueue()){
-                    if(currentTime >= peekReadyQueue().getWaitingTime())
-                        pollReadyQueue();
-                }
-
-                waitTime--;
             }
+
+            if (!isEmptyReadyQueue() && peekReadyQueue().getCpuTime() != 0) {//computing
+                compute();
+                if(!tempProcessQueue.isEmpty()){//wait time increase
+                    for (Process p : tempProcessQueue)
+                        p.setWaitingTime(p.getWaitingTime() + 1);
+                }
+            } else if (!isEmptyReadyQueue() && peekReadyQueue().getCpuTime() == 0) {
+                //System.err.println(pollReadyQueue().toString());//remove to normal poll
+                process = pollReadyQueue();
+                totalWaitTime += process.getWaitingTime();
+                // set total wait time
+            }
+            if (isEmptyReadyQueue() && !tempProcessQueue.isEmpty()) {//moving temp q to ready q
+                addToReadyQueue(tempProcessQueue.poll());
+            }
+
+            if(isEmptyUserInputQueue() && isEmptyReadyQueue() && tempProcessQueue.isEmpty())
+                break;
 
             currentTime++;
         }
-
-
         System.out.println("FCFS: ");
-        averageWaitTime = totalWaitTime / (getInitialCapacity()/2);//pairs of two
+        averageWaitTime = totalWaitTime / getTotalQueueSize();
         System.out.println("Average Waiting Time: " + averageWaitTime);
     }
 
@@ -64,6 +70,6 @@ public class FCFS extends Scheduler {
 
     @Override
     Comparator<Process> comparator() {
-        return Comparator.comparingDouble(process -> process.getArrivalTime());
+        return Comparator.comparingDouble(Process::getArrivalTime);
     }
 }

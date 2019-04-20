@@ -29,13 +29,13 @@ public class Main {
 
         if (parsedUserInput.length % 2 == 0) {
 
-            for (int i = 0; i < parsedUserInput.length; i++){
+            for (int i = 0; i < parsedUserInput.length; i++){//move this to the scheduler
                 if(parsedUserInput[i] != null)
                     inputQueue.add(parsedUserInput[i]);
             }
 
-//            SRTF = new SRTF(parsedUserInput);
-//            SJF = new SJF(parsedUserInput);
+            SRTF = new SRTF(inputQueue);
+            SJF = new SJF(inputQueue);
             FCFS = new FCFS(inputQueue);
 
 //            SRTF.execute();

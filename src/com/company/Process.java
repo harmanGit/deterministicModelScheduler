@@ -23,7 +23,7 @@ public class Process{
         this.processID = processID;
         this.arrivalTime = arrivalTime;
         this.cpuTime = cpuTime;
-        this.waitingTime = 0;
+        this.waitingTime = 0.0;
     }
 
     public Process(String processID, double arrivalTime, double waitingTime, double cpuTime) {
