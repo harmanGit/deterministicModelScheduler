@@ -1,7 +1,9 @@
 package com.company;
 
+import java.util.Arrays;
 import java.util.Comparator;
 import java.util.PriorityQueue;
+import java.util.Queue;
 
 /**
  * Extends concrete subclasses SRTF, SJF, and FCFS responsible
@@ -11,12 +13,12 @@ import java.util.PriorityQueue;
  */
 public abstract class Scheduler {
     private PriorityQueue<Process> readyQueue;
-    private String[] parsedUserInput;
+    private Queue<String> userInputQueue;
     private int initialCapacity;
 
-    public Scheduler(String[] parsedUserInput) {
-        this.parsedUserInput = parsedUserInput;
-        this.initialCapacity = parsedUserInput.length;
+    public Scheduler(Queue<String> userInputQueue) {
+        this.userInputQueue = userInputQueue;
+        this.initialCapacity = userInputQueue.size();
         this.readyQueue = new PriorityQueue<>(initialCapacity, comparator());
     }
 
@@ -30,17 +32,19 @@ public abstract class Scheduler {
 //        }
 //    }
 
+    public String peekUserInputQueue(){return  userInputQueue.peek();}
+
+
+    public String pollUserInputQueue(){return userInputQueue.poll();}
+
+    public boolean isEmptyUserInputQueue(){return userInputQueue.isEmpty();}
+
     public PriorityQueue<Process> getReadyQueue() {
         return readyQueue;
     }
 
     public void setReadyQueue(PriorityQueue<Process> readyQueue) {
         this.readyQueue = readyQueue;
-    }
-
-
-    public String[] getParsedUserInput() {
-        return parsedUserInput;
     }
 
     public int getInitialCapacity() {
@@ -55,7 +59,7 @@ public abstract class Scheduler {
 
     public Process peekReadyQueue(){return readyQueue.peek();}
 
-    private Comparator<Process> defaultComparator(){return Comparator.comparingDouble(process -> process.arrivalTime);}
+    private Comparator<Process> defaultComparator(){return Comparator.comparingDouble(process -> process.getArrivalTime());}
 
     abstract void simulation();
 

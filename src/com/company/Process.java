@@ -1,7 +1,5 @@
 package com.company;
 
-import java.util.Comparator;
-
 /**
  * Class encapsulates the arrival time, waiting time, CPU time remaining, and any
  * other relevant attributes of a process.
@@ -9,10 +7,10 @@ import java.util.Comparator;
  * @author Harman Dhillon (4/18/2019)
  */
 public class Process{
-    String processID;
-    double arrivalTime;
-    double waitingTime;
-    double cpuTime;
+    private String processID;
+    private double arrivalTime;
+    private double waitingTime;
+    private double cpuTime;
 
     public Process() {
         this.processID = "";

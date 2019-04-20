@@ -1,5 +1,7 @@
 package com.company;
 
+import java.util.LinkedList;
+import java.util.Queue;
 import java.util.Scanner;
 
 /**
@@ -12,6 +14,7 @@ public class Main {
     public static void main(String[] args) {
         String rawUserInput;
         String[] parsedUserInput;
+        Queue<String> inputQueue = new LinkedList<String>();
         SRTF SRTF;
         SJF SJF;
         FCFS FCFS;
@@ -22,14 +25,22 @@ public class Main {
         rawUserInput = scanner.nextLine(); //test input: 1 8 2 5 3 5 4 2
         parsedUserInput = rawUserInput.split(" ");
 
+
+
         if (parsedUserInput.length % 2 == 0) {
+
+            for (int i = 0; i < parsedUserInput.length; i++){
+                if(parsedUserInput[i] != null)
+                    inputQueue.add(parsedUserInput[i]);
+            }
+
 //            SRTF = new SRTF(parsedUserInput);
-            SJF = new SJF(parsedUserInput);
-//            FCFS = new FCFS(parsedUserInput);
+//            SJF = new SJF(parsedUserInput);
+            FCFS = new FCFS(inputQueue);
 
 //            SRTF.execute();
-            SJF.execute();
-//            FCFS.execute();
+//            SJF.execute();
+            FCFS.execute();
         } else
             System.out.println("Invalid Input: Missing Data!");
 

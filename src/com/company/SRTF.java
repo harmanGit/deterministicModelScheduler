@@ -1,20 +1,19 @@
 package com.company;
 
 import java.util.Comparator;
+import java.util.Queue;
 
 /**
  * @author Harman Dhillon (4/18/2019)
  */
 public class SRTF extends Scheduler {
 
-    public SRTF(String[] parsedUserInput) {
-        super(parsedUserInput);
+    public SRTF(Queue<String> userInputQueue) {
+        super(userInputQueue);
     }
 
     @Override
     void simulation() {
-
-
     }
 
     @Override
@@ -25,6 +24,6 @@ public class SRTF extends Scheduler {
 
     @Override
     Comparator<Process> comparator() {
-        return Comparator.comparingDouble(process -> process.cpuTime);//cahnage this to wait time
+        return Comparator.comparingDouble(process -> process.getCpuTime());//cahnage this to wait time
     }
 }
