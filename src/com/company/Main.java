@@ -26,11 +26,10 @@ public class Main {
         parsedUserInput = rawUserInput.split(" ");
 
 
-
         if (parsedUserInput.length % 2 == 0) {
 
-            for (int i = 0; i < parsedUserInput.length; i++){//move this to the scheduler
-                if(parsedUserInput[i] != null)
+            for (int i = 0; i < parsedUserInput.length; i++) {//move this to the scheduler
+                if (parsedUserInput[i] != null)
                     inputQueue.add(parsedUserInput[i]);
             }
 
@@ -38,9 +37,9 @@ public class Main {
             SJF = new SJF(inputQueue);
             FCFS = new FCFS(inputQueue);
 
-//            SRTF.execute();
-//            SJF.execute();
-            FCFS.execute();
+//            SRTF.simulation();
+            SJF.simulation();
+            FCFS.simulation();
         } else
             System.out.println("Invalid Input: Missing Data!");
 

@@ -1,6 +1,5 @@
 package com.company;
 
-import java.util.Arrays;
 import java.util.Comparator;
 import java.util.PriorityQueue;
 import java.util.Queue;
@@ -13,8 +12,8 @@ import java.util.Queue;
  */
 public abstract class Scheduler {
     private PriorityQueue<Process> readyQueue;
-    private  Queue<String> userInputQueue;
-    private  int totalQueueSize;
+    private Queue<String> userInputQueue;
+    private int totalQueueSize;
 
     public Scheduler(Queue<String> userInputQueue) {
         this.userInputQueue = userInputQueue;
@@ -22,51 +21,48 @@ public abstract class Scheduler {
         this.readyQueue = new PriorityQueue<>(totalQueueSize, comparator());
     }
 
-//    public PriorityQueue<Process> getReadyQueue() {
-//    return readyQueue;
-//}
-//
-    public void printReadyQueue(){
-        for (Process singleProcess : readyQueue){
-            System.out.println(singleProcess.toString() + ", ");
-        }
+    public String peekUserInputQueue() {
+        return userInputQueue.peek();
     }
 
-    public String peekUserInputQueue(){return  userInputQueue.peek();}
+    public String pollUserInputQueue() {
+        return userInputQueue.poll();
+    }
 
-
-    public String pollUserInputQueue(){return userInputQueue.poll();}
-
-    public boolean isEmptyUserInputQueue(){return userInputQueue.isEmpty();}
+    public boolean isEmptyUserInputQueue() {
+        return userInputQueue.isEmpty();
+    }
 
     public PriorityQueue<Process> getReadyQueue() {
         return readyQueue;
     }
 
-    public void setReadyQueue(PriorityQueue<Process> readyQueue) {
-        this.readyQueue = readyQueue;
-    }
-
     public int getTotalQueueSize() {
-        return totalQueueSize/2;//pairs of two (BUG: EXPLAIN)
+        return totalQueueSize / 2;//pairs of two (BUG: EXPLAIN)
     }
 
-    public boolean isEmptyReadyQueue(){return readyQueue.isEmpty();}
+    public boolean isEmptyReadyQueue() {
+        return readyQueue.isEmpty();
+    }
 
-    public void addToReadyQueue(Process process){readyQueue.add(process);}
+    public void addToReadyQueue(Process process) {
+        readyQueue.add(process);
+    }
 
-    public Process pollReadyQueue(){return readyQueue.poll();}
+    public Process pollReadyQueue() {
+        return readyQueue.poll();
+    }
 
-    public Process peekReadyQueue(){return readyQueue.peek();}
+    public Process peekReadyQueue() {
+        return readyQueue.peek();
+    }
 
-    public double compute(){
+    public double compute() {
         readyQueue.peek().setCpuTime(readyQueue.peek().getCpuTime() - 1);
         return readyQueue.peek().getCpuTime();
     }
 
     abstract void simulation();
-
-    abstract void execute();
 
     abstract Comparator<Process> comparator();
 }

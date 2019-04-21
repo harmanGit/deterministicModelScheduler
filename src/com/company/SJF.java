@@ -8,6 +8,8 @@ import java.util.Queue;
  * @author Harman Dhillon (4/18/2019)
  */
 public class SJF extends Scheduler {
+    private PriorityQueue<Process> readyQueue;
+    private Queue<String> userInputQueue;
 
     public SJF(Queue<String> userInputQueue) {
         super(userInputQueue);
@@ -15,7 +17,6 @@ public class SJF extends Scheduler {
 
     @Override
     void simulation() {
-        System.err.println("asdfasdf: " + peekUserInputQueue());
         PriorityQueue<Process> tempProcessQueue = new PriorityQueue<>(getTotalQueueSize(), comparator());
         Process process;
         int currentTime = 0;
@@ -38,21 +39,20 @@ public class SJF extends Scheduler {
 
             if (!isEmptyReadyQueue() && peekReadyQueue().getCpuTime() != 0) {//computing
                 compute();
-                if(!tempProcessQueue.isEmpty()){//wait time increase
+                if (!tempProcessQueue.isEmpty()) {//wait time increase
                     for (Process p : tempProcessQueue)
                         p.setWaitingTime(p.getWaitingTime() + 1);
                 }
             } else if (!isEmptyReadyQueue() && peekReadyQueue().getCpuTime() == 0) {
                 //System.err.println(pollReadyQueue().toString());//remove to normal poll
                 process = pollReadyQueue();
-                totalWaitTime += process.getWaitingTime();
-                // set total wait time
+                totalWaitTime += process.getWaitingTime();// set total wait time
             }
             if (isEmptyReadyQueue() && !tempProcessQueue.isEmpty()) {//moving temp q to ready q
                 addToReadyQueue(tempProcessQueue.poll());
             }
 
-            if(isEmptyUserInputQueue() && isEmptyReadyQueue() && tempProcessQueue.isEmpty())
+            if (isEmptyUserInputQueue() && isEmptyReadyQueue() && tempProcessQueue.isEmpty())
                 break;
 
             currentTime++;
@@ -61,11 +61,6 @@ public class SJF extends Scheduler {
         System.out.println("SJF: ");
         averageWaitTime = totalWaitTime / getTotalQueueSize();
         System.out.println("Average Waiting Time: " + averageWaitTime);
-    }
-
-    @Override
-    void execute() {
-        simulation();
     }
 
     Comparator<Process> comparator() {

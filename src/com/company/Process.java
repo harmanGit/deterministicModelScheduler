@@ -6,7 +6,7 @@ package com.company;
  *
  * @author Harman Dhillon (4/18/2019)
  */
-public class Process{
+public class Process {
     private String processID;
     private double arrivalTime;
     private double waitingTime;

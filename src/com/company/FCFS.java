@@ -14,8 +14,6 @@ public class FCFS extends Scheduler {
 
     @Override
     void simulation() {
-        System.err.println("asdfasdf: " + peekUserInputQueue());
-
         PriorityQueue<Process> tempProcessQueue = new PriorityQueue<>(getTotalQueueSize(), comparator());
         Process process;
         int currentTime = 0;
@@ -38,7 +36,7 @@ public class FCFS extends Scheduler {
 
             if (!isEmptyReadyQueue() && peekReadyQueue().getCpuTime() != 0) {//computing
                 compute();
-                if(!tempProcessQueue.isEmpty()){//wait time increase
+                if (!tempProcessQueue.isEmpty()) {//wait time increase
                     for (Process p : tempProcessQueue)
                         p.setWaitingTime(p.getWaitingTime() + 1);
                 }
@@ -52,7 +50,7 @@ public class FCFS extends Scheduler {
                 addToReadyQueue(tempProcessQueue.poll());
             }
 
-            if(isEmptyUserInputQueue() && isEmptyReadyQueue() && tempProcessQueue.isEmpty())
+            if (isEmptyUserInputQueue() && isEmptyReadyQueue() && tempProcessQueue.isEmpty())
                 break;
 
             currentTime++;
@@ -62,11 +60,6 @@ public class FCFS extends Scheduler {
         System.out.println("Average Waiting Time: " + averageWaitTime);
     }
 
-    @Override
-    void execute() {
-        //printReadyQueue();
-        simulation();
-    }
 
     @Override
     Comparator<Process> comparator() {
