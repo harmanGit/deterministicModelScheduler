@@ -22,44 +22,44 @@ public abstract class Scheduler {
     }
 
     public String peekUserInputQueue() {
-        return userInputQueue.peek();
+        return  this.userInputQueue.peek();
     }
 
     public String pollUserInputQueue() {
-        return userInputQueue.poll();
+        return  this.userInputQueue.poll();
     }
 
     public boolean isEmptyUserInputQueue() {
-        return userInputQueue.isEmpty();
+        return  this.userInputQueue.isEmpty();
     }
 
     public PriorityQueue<Process> getReadyQueue() {
-        return readyQueue;
+        return  this.readyQueue;
     }
 
     public int getTotalQueueSize() {
-        return totalQueueSize / 2;//pairs of two (BUG: EXPLAIN)
+        return  this.totalQueueSize / 2;//pairs of two (BUG: EXPLAIN)
     }
 
     public boolean isEmptyReadyQueue() {
-        return readyQueue.isEmpty();
+        return  this.readyQueue.isEmpty();
     }
 
     public void addToReadyQueue(Process process) {
-        readyQueue.add(process);
+        this.readyQueue.add(process);
     }
 
     public Process pollReadyQueue() {
-        return readyQueue.poll();
+        return  this.readyQueue.poll();
     }
 
     public Process peekReadyQueue() {
-        return readyQueue.peek();
+        return  this.readyQueue.peek();
     }
 
     public double compute() {
-        readyQueue.peek().setCpuTime(readyQueue.peek().getCpuTime() - 1);
-        return readyQueue.peek().getCpuTime();
+        this.readyQueue.peek().setCpuTime( this.readyQueue.peek().getCpuTime() - 1);
+        return  this.readyQueue.peek().getCpuTime();
     }
 
     abstract void simulation();

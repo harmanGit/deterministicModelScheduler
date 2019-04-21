@@ -26,22 +26,49 @@ public class Main {
         parsedUserInput = rawUserInput.split(" ");
 
 
+//        if (parsedUserInput.length % 2 == 0) {
+//
+//            for (int i = 0; i < parsedUserInput.length; i++) {//move this to the scheduler
+//                if (parsedUserInput[i] != null)
+//                    inputQueue.add(parsedUserInput[i]);
+//            }
+//
+//            SRTF = new SRTF(inputQueue);
+//            SJF = new SJF(inputQueue);
+//            FCFS = new FCFS(inputQueue);
+//
+////            SRTF.simulation();
+//            SJF.simulation();
+//            FCFS.simulation();
+//        } else
+//            System.out.println("Invalid Input: Missing Data!");
+
         if (parsedUserInput.length % 2 == 0) {
 
+            Queue<String> SRTFQueue = new LinkedList<>();
+            Queue<String> SJFQueue = new LinkedList<>();
+            Queue<String> FCFSQueue = new LinkedList<>();
+
             for (int i = 0; i < parsedUserInput.length; i++) {//move this to the scheduler
-                if (parsedUserInput[i] != null)
-                    inputQueue.add(parsedUserInput[i]);
+                if (parsedUserInput[i] != null) {
+                    SRTFQueue.add(parsedUserInput[i]);
+                    SJFQueue.add(parsedUserInput[i]);
+                    FCFSQueue.add(parsedUserInput[i]);
+                }
             }
 
-            SRTF = new SRTF(inputQueue);
-            SJF = new SJF(inputQueue);
-            FCFS = new FCFS(inputQueue);
+            SRTF = new SRTF(SRTFQueue);
+            SJF = new SJF(SJFQueue);
+            FCFS = new FCFS(FCFSQueue);
 
-//            SRTF.simulation();
-            SJF.simulation();
-            FCFS.simulation();
+            SRTF.simulation();
+//            SJF.simulation();
+//            FCFS.simulation();
         } else
             System.out.println("Invalid Input: Missing Data!");
+
+
+//    }
 
 
     }
