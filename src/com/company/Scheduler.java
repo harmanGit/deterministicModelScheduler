@@ -57,7 +57,62 @@ public abstract class Scheduler {
         return  this.readyQueue.peek();
     }
 
-    public double compute() {
+    public void defaultSimulation(String typeOfScheduler){
+        PriorityQueue<Process> tempProcessQueue = new PriorityQueue<>(getTotalQueueSize(), comparator());
+        Process process;
+        int currentTime = 0;
+        int letterCounter = 0;
+        double totalWaitTime = 0;
+        double averageWaitTime;
+        double waitTime = 0;
+
+        while (true) {
+            //going through the user input
+            if (!userInputQueue.isEmpty() && Integer.parseInt(userInputQueue.peek()) == currentTime) {
+                process = new Process(Character.toString((char) ('A' + letterCounter++)),
+                        Double.valueOf(userInputQueue.poll()), Double.valueOf(userInputQueue.poll()));
+                if (waitTime != 0) {
+                    tempProcessQueue.add(process);
+                } else {
+                    readyQueue.add(process);
+                    waitTime = process.getCpuTime();
+                }
+            }
+
+//            if(!readyQueue.isEmpty()){
+//
+//            }
+
+
+            if (!readyQueue.isEmpty() && readyQueue.peek().getCpuTime() != 0) {//computing
+                compute();
+                if (!tempProcessQueue.isEmpty()) {//wait time increase
+                    for (Process p : tempProcessQueue)
+                        p.setWaitingTime(p.getWaitingTime() + 1);
+                }
+            } else if (!readyQueue.isEmpty() && readyQueue.peek().getCpuTime() == 0) {
+                totalWaitTime += readyQueue.poll().getWaitingTime();// set total wait time
+            }
+            if (readyQueue.isEmpty() && !tempProcessQueue.isEmpty()) {//moving temp q to ready q
+                readyQueue.add(tempProcessQueue.poll());
+            }
+
+
+
+
+
+            if (userInputQueue.isEmpty() && readyQueue.isEmpty() && tempProcessQueue.isEmpty())
+                break;
+
+            currentTime++;
+        }
+
+        System.out.println(typeOfScheduler + ": ");
+        averageWaitTime = totalWaitTime / getTotalQueueSize();
+        System.out.println("Average Waiting Time: " + averageWaitTime);
+    }
+
+    private double compute() {
         this.readyQueue.peek().setCpuTime( this.readyQueue.peek().getCpuTime() - 1);
         return  this.readyQueue.peek().getCpuTime();
     }

@@ -7,6 +7,7 @@ import java.util.Queue;
  * @author Harman Dhillon (4/18/2019)
  */
 public class SRTF extends Scheduler {
+    private final String SCHEDULERTYPE = "SRTF";
 
     public SRTF(Queue<String> userInputQueue) {
         super(userInputQueue);
@@ -26,31 +27,29 @@ public class SRTF extends Scheduler {
                 process = new Process(Character.toString((char) ('A' + letterCounter++)),
                         Double.valueOf(pollUserInputQueue()), Double.valueOf(pollUserInputQueue()));
                 if (waitTime != 0) {
-                    addToReadyQueue(process);//tempProcessQueue.add(process);
+                    addToReadyQueue(process);
                 } else {
-                    addToReadyQueue(process);//
+                    addToReadyQueue(process);
                     waitTime = process.getCpuTime();
                 }
             }
 
-            if (!isEmptyReadyQueue() && peekReadyQueue().getCpuTime() != 0) {//computing
-
+            if (!isEmptyReadyQueue()) {
                 process = pollReadyQueue();
-                System.err.println(process.toString());
+//                System.err.println(process.toString());
                 process.setCpuTime(process.getCpuTime() -1);
 
-                if (process.getCpuTime() == 0) {
-                    totalWaitTime += process.getWaitingTime();
-                    System.err.println("LOST: "+process.toString());
-                }else{
-                    if(!isEmptyReadyQueue()){//wait time increase
-                        for (Process p : getReadyQueue())
-                            p.setWaitingTime(p.getWaitingTime() + 1);
-                    }
-                    addToReadyQueue(process);
+                if(!isEmptyReadyQueue()){//wait time increase
+                    for (Process p : getReadyQueue())
+                        p.setWaitingTime(p.getWaitingTime() + 1);
                 }
 
+                if (process.getCpuTime() != 0)
+                    addToReadyQueue(process);
+                else
+                    totalWaitTime += process.getWaitingTime();
             }
+
 
             if(isEmptyUserInputQueue() && isEmptyReadyQueue())
                 break;
@@ -58,7 +57,7 @@ public class SRTF extends Scheduler {
         }
 
         System.err.println("total wait time: " + totalWaitTime);
-        System.out.println("SRTF: ");
+        System.out.println(SCHEDULERTYPE + ": ");
         averageWaitTime = totalWaitTime / getTotalQueueSize();
         System.out.println("Average Waiting Time: " + averageWaitTime);
     }

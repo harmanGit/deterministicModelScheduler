@@ -22,7 +22,7 @@ public class Main {
 
         System.out.println("Enter process arrival times and burst lengths.");
 
-        rawUserInput = scanner.nextLine(); //test input: 1 8 2 5 3 5 4 2
+        rawUserInput = scanner.nextLine(); //test input: 1 8 2 5 3 5 4 2 || 0 9 3 5 4 2 || 0 10 3 5 4 2 7 8 8 4
         parsedUserInput = rawUserInput.split(" ");
 
 
@@ -62,8 +62,8 @@ public class Main {
             FCFS = new FCFS(FCFSQueue);
 
             SRTF.simulation();
-//            SJF.simulation();
-//            FCFS.simulation();
+            SJF.simulation();
+            FCFS.simulation();
         } else
             System.out.println("Invalid Input: Missing Data!");
 
