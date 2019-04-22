@@ -1,5 +1,6 @@
 package com.company;
 
+import java.text.DecimalFormat;
 import java.util.Comparator;
 import java.util.PriorityQueue;
 import java.util.Queue;
@@ -22,27 +23,27 @@ public abstract class Scheduler {
     }
 
     public String peekUserInputQueue() {
-        return  this.userInputQueue.peek();
+        return this.userInputQueue.peek();
     }
 
     public String pollUserInputQueue() {
-        return  this.userInputQueue.poll();
+        return this.userInputQueue.poll();
     }
 
     public boolean isEmptyUserInputQueue() {
-        return  this.userInputQueue.isEmpty();
+        return this.userInputQueue.isEmpty();
     }
 
     public PriorityQueue<Process> getReadyQueue() {
-        return  this.readyQueue;
+        return this.readyQueue;
     }
 
     public int getTotalQueueSize() {
-        return  this.totalQueueSize / 2;//pairs of two (BUG: EXPLAIN)
+        return this.totalQueueSize / 2;//pairs of two (BUG: EXPLAIN)
     }
 
     public boolean isEmptyReadyQueue() {
-        return  this.readyQueue.isEmpty();
+        return this.readyQueue.isEmpty();
     }
 
     public void addToReadyQueue(Process process) {
@@ -50,14 +51,18 @@ public abstract class Scheduler {
     }
 
     public Process pollReadyQueue() {
-        return  this.readyQueue.poll();
+        return this.readyQueue.poll();
     }
 
     public Process peekReadyQueue() {
-        return  this.readyQueue.peek();
+        return this.readyQueue.peek();
     }
 
-    public void defaultSimulation(String typeOfScheduler){
+    public DecimalFormat getDecimalFormat() {
+        return new DecimalFormat("#.00");
+    }
+
+    public void defaultSimulation(String typeOfScheduler) {
         PriorityQueue<Process> tempProcessQueue = new PriorityQueue<>(getTotalQueueSize(), comparator());
         Process process;
         int currentTime = 0;
@@ -79,29 +84,20 @@ public abstract class Scheduler {
                 }
             }
 
-//            if(!readyQueue.isEmpty()){
-//
-//            }
-
-
-            if (!readyQueue.isEmpty() && readyQueue.peek().getCpuTime() != 0) {//computing
+            if (!readyQueue.isEmpty()) {
                 compute();
                 if (!tempProcessQueue.isEmpty()) {//wait time increase
                     for (Process p : tempProcessQueue)
                         p.setWaitingTime(p.getWaitingTime() + 1);
                 }
-            } else if (!readyQueue.isEmpty() && readyQueue.peek().getCpuTime() == 0) {
-                totalWaitTime += readyQueue.poll().getWaitingTime();// set total wait time
-            }
-            if (readyQueue.isEmpty() && !tempProcessQueue.isEmpty()) {//moving temp q to ready q
-                readyQueue.add(tempProcessQueue.poll());
-            }
 
+                if (readyQueue.peek().getCpuTime() == 0) {
+                    totalWaitTime += readyQueue.poll().getWaitingTime();// set total wait time
+                }
+            } else if (!tempProcessQueue.isEmpty())
+                readyQueue.add(tempProcessQueue.poll());//moving from temp q to ready q
 
-
-
-
-            if (userInputQueue.isEmpty() && readyQueue.isEmpty() && tempProcessQueue.isEmpty())
+            if (userInputQueue.isEmpty() && readyQueue.isEmpty() && tempProcessQueue.isEmpty())//ending condition
                 break;
 
             currentTime++;
@@ -109,12 +105,12 @@ public abstract class Scheduler {
 
         System.out.println(typeOfScheduler + ": ");
         averageWaitTime = totalWaitTime / getTotalQueueSize();
-        System.out.println("Average Waiting Time: " + averageWaitTime);
+        System.out.println("Average Waiting Time: " + getDecimalFormat().format(averageWaitTime));
     }
 
     private double compute() {
-        this.readyQueue.peek().setCpuTime( this.readyQueue.peek().getCpuTime() - 1);
-        return  this.readyQueue.peek().getCpuTime();
+        this.readyQueue.peek().setCpuTime(this.readyQueue.peek().getCpuTime() - 1);
+        return this.readyQueue.peek().getCpuTime();
     }
 
     abstract void simulation();

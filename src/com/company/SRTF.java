@@ -20,26 +20,18 @@ public class SRTF extends Scheduler {
         int letterCounter = 0;
         double totalWaitTime = 0;
         double averageWaitTime;
-        double waitTime = 0;
 
         while (true) {
             if (!isEmptyUserInputQueue() && Integer.parseInt(peekUserInputQueue()) == currentTime) {
-                process = new Process(Character.toString((char) ('A' + letterCounter++)),
-                        Double.valueOf(pollUserInputQueue()), Double.valueOf(pollUserInputQueue()));
-                if (waitTime != 0) {
-                    addToReadyQueue(process);
-                } else {
-                    addToReadyQueue(process);
-                    waitTime = process.getCpuTime();
-                }
+                addToReadyQueue(new Process(Character.toString((char) ('A' + letterCounter++)),
+                        Double.valueOf(pollUserInputQueue()), Double.valueOf(pollUserInputQueue())));
             }
 
             if (!isEmptyReadyQueue()) {
                 process = pollReadyQueue();
-//                System.err.println(process.toString());
-                process.setCpuTime(process.getCpuTime() -1);
+                process.setCpuTime(process.getCpuTime() - 1);
 
-                if(!isEmptyReadyQueue()){//wait time increase
+                if (!isEmptyReadyQueue()) {//wait time increase
                     for (Process p : getReadyQueue())
                         p.setWaitingTime(p.getWaitingTime() + 1);
                 }
@@ -50,18 +42,16 @@ public class SRTF extends Scheduler {
                     totalWaitTime += process.getWaitingTime();
             }
 
-
-            if(isEmptyUserInputQueue() && isEmptyReadyQueue())
+            if (isEmptyUserInputQueue() && isEmptyReadyQueue())//ending condition
                 break;
+
             currentTime++;
         }
 
-        System.err.println("total wait time: " + totalWaitTime);
         System.out.println(SCHEDULERTYPE + ": ");
         averageWaitTime = totalWaitTime / getTotalQueueSize();
-        System.out.println("Average Waiting Time: " + averageWaitTime);
+        System.out.println("Average Waiting Time: " + getDecimalFormat().format(averageWaitTime));
     }
-
 
     @Override
     Comparator<Process> comparator() {

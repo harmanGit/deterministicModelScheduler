@@ -37,7 +37,7 @@ public class Main {
 //            SJF = new SJF(inputQueue);
 //            FCFS = new FCFS(inputQueue);
 //
-////            SRTF.simulation();
+//            SRTF.simulation();
 //            SJF.simulation();
 //            FCFS.simulation();
 //        } else

@@ -18,7 +18,6 @@ public class FCFS extends Scheduler {
         defaultSimulation(SCHEDULERTYPE);
     }
 
-
     @Override
     Comparator<Process> comparator() {
         return Comparator.comparingDouble(Process::getArrivalTime);
