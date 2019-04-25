@@ -1,7 +1,6 @@
 package com.company;
 
 import java.util.Comparator;
-import java.util.Queue;
 
 /**
  * Concrete subclass extending the abstract Scheduler class for the SRTF(CPU scheduling algorithm).
@@ -24,10 +23,10 @@ public class SRTF extends Scheduler {
     @Override
     void simulation() {
         Process process;
-        String previousProcessID = "";
+        String previousProcess = "A";
         int currentTime = 0;
         int letterCounter = 0;
-        int numberOfProcessIterations = 0;
+        int numberOfProcessIterations = -1;
         double totalWaitTime = 0;
         double averageWaitTime;
 
@@ -42,35 +41,35 @@ public class SRTF extends Scheduler {
             if (!isEmptyReadyQueue()) {
                 process = pollReadyQueue();
                 process.setCpuTime(process.getCpuTime() - 1);
+
                 numberOfProcessIterations++;
 
-//                if(!previousProcessID.equals(process.getProcessID()))
-                    displayProcess(process, numberOfProcessIterations);//displaying process order with iterations to the user
-
-                if (!isEmptyReadyQueue()) {//wait time increase
-                    for (Process p : getReadyQueue())
-                        p.setWaitingTime(p.getWaitingTime() + 1);
-                }
-
-                if (process.getCpuTime() != 0) {
-                    previousProcessID = process.getProcessID();
-                    addToReadyQueue(process);
-                }else{
-                    totalWaitTime += process.getWaitingTime();
-                    displayProcess(process, numberOfProcessIterations);//displaying process order with iterations to the user
+                if (!previousProcess.equals(process.getProcessID())) {
+                    System.out.print(previousProcess + numberOfProcessIterations + " ");
                     numberOfProcessIterations = 0;
                 }
 
+                previousProcess = process.getProcessID();
+
+                for (Process p : getReadyQueue())
+                    p.setWaitingTime(p.getWaitingTime() + 1);
+
+                if (process.getCpuTime() != 0) {
+                    addToReadyQueue(process);
+                } else {
+                    totalWaitTime += process.getWaitingTime();
+                }
+
+                if (isEmptyUserInputQueue() && isEmptyReadyQueue()) { //ending condition
+                    numberOfProcessIterations++;
+                    System.out.println(previousProcess + numberOfProcessIterations);
+                    break;
+                }
             }
-
-            if (isEmptyUserInputQueue() && isEmptyReadyQueue())//ending condition
-                break;
-
             currentTime++;
         }
 
-        System.out.println("");
-        averageWaitTime = totalWaitTime / getTotalQueueSize();
+        averageWaitTime = totalWaitTime / getReadyQueueSize();
         System.out.println("Average Waiting Time: " + getDecimalFormat().format(averageWaitTime));
     }
 
