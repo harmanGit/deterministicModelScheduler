@@ -1,75 +1,35 @@
 package com.company;
 
-import java.util.LinkedList;
-import java.util.Queue;
 import java.util.Scanner;
 
 /**
  * The purpose of this assignment is to investigate SRTF (Shortest Remaining Time First) scheduling
- * through deterministic modeling in Java. For simplicity we are ignoring dispatch latency and assuming
- * that each process consists of a single CPU burst.
+ * through deterministic modeling in Java(comparing SRTF with SJF and FCFS). For simplicity we are
+ * ignoring dispatch latency and assuming that each process consists of a single CPU burst.
+ *
+ * User Input - Expected input is arrival time and cpu burst time, separated by space
+ *  Example Input:
+ *   1 8 2 5 3 5 4 2
+ *   0 9 3 5 4 2
+ *   0 10 3 5 4 2 7 8 8 4
  */
 public class Main {
 
     public static void main(String[] args) {
         String rawUserInput;
         String[] parsedUserInput;
-        Queue<String> inputQueue = new LinkedList<String>();
-        SRTF SRTF;
-        SJF SJF;
-        FCFS FCFS;
         Scanner scanner = new Scanner(System.in);
 
         System.out.println("Enter process arrival times and burst lengths.");
 
-        rawUserInput = scanner.nextLine(); //test input: 1 8 2 5 3 5 4 2 || 0 9 3 5 4 2 || 0 10 3 5 4 2 7 8 8 4
-        parsedUserInput = rawUserInput.split(" ");
+        rawUserInput = scanner.nextLine();
+        parsedUserInput = rawUserInput.split(" ");//parsing the string by the space
 
-
-//        if (parsedUserInput.length % 2 == 0) {
-//
-//            for (int i = 0; i < parsedUserInput.length; i++) {//move this to the scheduler
-//                if (parsedUserInput[i] != null)
-//                    inputQueue.add(parsedUserInput[i]);
-//            }
-//
-//            SRTF = new SRTF(inputQueue);
-//            SJF = new SJF(inputQueue);
-//            FCFS = new FCFS(inputQueue);
-//
-//            SRTF.simulation();
-//            SJF.simulation();
-//            FCFS.simulation();
-//        } else
-//            System.out.println("Invalid Input: Missing Data!");
-
-        if (parsedUserInput.length % 2 == 0) {
-
-            Queue<String> SRTFQueue = new LinkedList<>();
-            Queue<String> SJFQueue = new LinkedList<>();
-            Queue<String> FCFSQueue = new LinkedList<>();
-
-            for (int i = 0; i < parsedUserInput.length; i++) {//move this to the scheduler
-                if (parsedUserInput[i] != null) {
-                    SRTFQueue.add(parsedUserInput[i]);
-                    SJFQueue.add(parsedUserInput[i]);
-                    FCFSQueue.add(parsedUserInput[i]);
-                }
-            }
-
-            SRTF = new SRTF(SRTFQueue);
-            SJF = new SJF(SJFQueue);
-            FCFS = new FCFS(FCFSQueue);
-
-            SRTF.simulation();
-            SJF.simulation();
-            FCFS.simulation();
+        if (parsedUserInput.length % 2 == 0) {// insuring each arrival time has a CPU burst
+            new SRTF(parsedUserInput).simulation();
+            new SJF(parsedUserInput).simulation();
+            new FCFS(parsedUserInput).simulation();
         } else
             System.out.println("Invalid Input: Missing Data!");
-
-
-//    }
-
-
     }
 }
