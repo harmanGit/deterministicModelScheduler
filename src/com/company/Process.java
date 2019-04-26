@@ -6,10 +6,10 @@ package com.company;
  * @author Harman Dhillon (4/18/2019)
  */
 public class Process {
-    private String processID;
-    private double arrivalTime;
-    private double waitingTime;
-    private double cpuTime;
+    private String processID;//represents the process ID.
+    private double arrivalTime;//represents the process arrival time.
+    private double waitingTime;//represents the process waiting time.
+    private double cpuTime;//represents the process cpu time "cpu burst length".
 
     /**
      * Default Constructor.

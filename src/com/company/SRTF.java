@@ -20,56 +20,66 @@ public class SRTF extends Scheduler {
         super(parsedUserInput);
     }
 
+    /**
+     * Method is used to (sudo)simulate the SRTF CPU scheduler. Simulation consists of a loop that repeats once for
+     * each unit of time (single <code>int</code>). If a process is arriving at the current time, it is put into
+     * the ready queue. When a process finishes executing, it is removed from the system and another is taken from
+     * the queue (if not empty). Each time a process is being "executed", the CPU time of the process simply gets
+     * decremented by one. Method will also keep track of the total waiting time for all processes (in order to
+     * compute the average when the simulation ends and displays it).
+     */
     @Override
     void simulation() {
-        Process process;
-        String previousProcess = "A";
+        Process process = null;
+        String previousProcess = "A";//always starts with this process
         int currentTime = 0;
-        int letterCounter = 0;
-        int numberOfProcessIterations = -1;
+        int letterCounter = 0;//counter user to increment through the letters for the process id
+        int numberOfProcessIterations = 0;
         double totalWaitTime = 0;
         double averageWaitTime;
 
         System.out.print(SCHEDULERTYPE + ": ");
 
-        while (true) {
-            if (!isEmptyUserInputQueue() && Integer.parseInt(peekUserInputQueue()) == currentTime) {
+        while (true) {//loop that repeats once for each unit of time.
+            if (!isEmptyUserInputQueue() && Integer.parseInt(peekUserInputQueue()) == currentTime)
+                //if current time matches arrival time, then creating and adding a process to the ready queue
                 addToReadyQueue(new Process(Character.toString((char) ('A' + letterCounter++)),
                         Double.valueOf(pollUserInputQueue()), Double.valueOf(pollUserInputQueue())));
-            }
 
             if (!isEmptyReadyQueue()) {
-                process = pollReadyQueue();
-                process.setCpuTime(process.getCpuTime() - 1);
+                process = pollReadyQueue();//getting the shortest job remaining (shortest CPU) process
+                process.setCpuTime(process.getCpuTime() - 1);//decrementing the current processes cpu time("executing")
 
-                numberOfProcessIterations++;
-
+                //checking to see if its a new process, and not the old one
                 if (!previousProcess.equals(process.getProcessID())) {
-                    System.out.print(previousProcess + numberOfProcessIterations + " ");
-                    numberOfProcessIterations = 0;
+                    displayProcess(previousProcess, numberOfProcessIterations);
+                    numberOfProcessIterations = 0;//setting process iterations to 0, as the process has been completed
                 }
 
-                previousProcess = process.getProcessID();
+                previousProcess = process.getProcessID();//setting the current process as the previous one
 
-                for (Process p : getReadyQueue())
+                for (Process p : getReadyQueue())//increasing the wait time for all processes not executing
                     p.setWaitingTime(p.getWaitingTime() + 1);
 
-                if (process.getCpuTime() != 0) {
+                //adding the process back to the ready queue if its not complete (CPU time = 0)
+                if (process.getCpuTime() != 0)
                     addToReadyQueue(process);
-                } else {
+                else //if the process was complete, then the total time is increased with its wait time
                     totalWaitTime += process.getWaitingTime();
-                }
+            }
 
-                if (isEmptyUserInputQueue() && isEmptyReadyQueue()) { //ending condition
-                    numberOfProcessIterations++;
-                    System.out.println(previousProcess + numberOfProcessIterations);
-                    break;
-                }
+            if (process != null)//only starting to increment the process counter if process ever exists
+                numberOfProcessIterations++;//process was execute, so iteration must be incremented
+
+            if (isEmptyUserInputQueue() && isEmptyReadyQueue()) { //end condition
+                displayProcess(previousProcess, numberOfProcessIterations);//display the last completed process
+                break;
             }
             currentTime++;
         }
 
-        averageWaitTime = totalWaitTime / getReadyQueueSize();
+        System.out.println();//formatting
+        averageWaitTime = totalWaitTime / getReadyQueueSize();//calculating the average wait time
         System.out.println("Average Waiting Time: " + getDecimalFormat().format(averageWaitTime));
     }
 

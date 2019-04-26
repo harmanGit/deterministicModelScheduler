@@ -6,12 +6,14 @@ import java.util.Scanner;
  * The purpose of this assignment is to investigate SRTF (Shortest Remaining Time First) scheduling
  * through deterministic modeling in Java(comparing SRTF with SJF and FCFS). For simplicity we are
  * ignoring dispatch latency and assuming that each process consists of a single CPU burst.
- *
+ * <p>
  * User Input - Expected input is arrival time and cpu burst time, separated by space
- *  Example Input:
- *   1 8 2 5 3 5 4 2
- *   0 9 3 5 4 2
- *   0 10 3 5 4 2 7 8 8 4
+ * Example Input:
+ * 1 8 2 5 3 5 4 2
+ * 0 9 3 5 4 2
+ * 0 10 3 5 4 2 7 8 8 4
+ *
+ * @author Harman Dhillon (4/18/2019)
  */
 public class Main {
 

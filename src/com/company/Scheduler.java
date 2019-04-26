@@ -1,18 +1,14 @@
 package com.company;
 
 import java.text.DecimalFormat;
-import java.util.Arrays;
-import java.util.Comparator;
-import java.util.LinkedList;
-import java.util.PriorityQueue;
-import java.util.Queue;
+import java.util.*;
 
 /**
  * Abstract class, intended to used to create CPU scheduling algorithms(with sudo simulations).
- *
+ * <p>
  * Abstract Methods:
- *  simulation()
- *  comparator()
+ * simulation()
+ * comparator()
  *
  * @author Harman Dhillon (4/18/2019)
  */
@@ -131,83 +127,94 @@ public abstract class Scheduler {
      * each unit of time (single <code>int</code>). If a process is arriving at the current time, it is put into
      * the ready queue. When a process finishes executing, it is removed from the system and another is taken from
      * the queue (if not empty). Each time a process is being "executed", the CPU time of the process simply gets
-     * decremented by one. Method will also keep track of the total waiting time for all processes (in order to compute
-     * the average when the simulation ends and displays it).
+     * decremented by one. Method will also keep track of the total waiting time for all processes (in order to
+     * compute the average when the simulation ends and displays it).
      *
      * @param typeOfScheduler <code>String</code> represents the name of the CPU scheduler.
      */
     protected void defaultSimulation(String typeOfScheduler) {
-        //Temp PriorityQueue used to store sorted processes that are not yet ready to be executed, wait time is
-        //is incremented only in this queue
-        PriorityQueue<Process> tempProcessQueue = new PriorityQueue<>(getReadyQueueSize(), comparator());
-        Process process;
+        Process process = null;
         int currentTime = 0;
         int letterCounter = 0;//counter user to increment through the letters for the process id
         int numberOfProcessIterations = 0;//total number of times a process is "executing" on the CPU
         double totalWaitTime = 0;
         double averageWaitTime;
-        boolean firstProcessExecuted = false;//meant to add the first process to the ready queue(only ever used once)
+        boolean canCompute = false;//boolean is used to check if the CPU has a process to execute
         System.out.print(typeOfScheduler + ": ");
 
         while (true) {//loop that repeats once for each unit of time.
-             //If a process is arriving at the current time, it is put into the ready queue or temp queue.
-            if (!userInputQueue.isEmpty() && Integer.parseInt(userInputQueue.peek()) == currentTime) {
-                //creating process object, for either the ready queue or temp queue
-                process = new Process(Character.toString((char) ('A' + letterCounter++)),
-                        Double.valueOf(userInputQueue.poll()), Double.valueOf(userInputQueue.poll()));
-                if (firstProcessExecuted)//if its the process process ever then its added directly in the ready queue
-                    tempProcessQueue.add(process);//process added to the temp queue as the "CPU" busy
-                else {
-                    readyQueue.add(process);
-                    firstProcessExecuted = true;//insuring nothing else is added directly to the ready queue again
-                }
-            }
+            //if current time matches arrival time, then creating and adding a process to the ready queue
+            if (!userInputQueue.isEmpty() && Integer.parseInt(userInputQueue.peek()) == currentTime)
+                readyQueue.add(new Process(Character.toString((char) ('A' + letterCounter++)),
+                        Double.valueOf(userInputQueue.poll()), Double.valueOf(userInputQueue.poll())));
 
-            if (!readyQueue.isEmpty()) {
-                compute();//decrementing the current processes cpu time
+            if (canCompute) {//checking if the "CPU" has a process to execute
                 numberOfProcessIterations++;
-                    for (Process p : tempProcessQueue)//increasing the wait time for all process not executing
-                        p.setWaitingTime(p.getWaitingTime() + 1);
-                if (readyQueue.peek().getCpuTime() == 0) {//checking if a process has completed its task (cpuTime == 0)
-                    process = readyQueue.poll();//process thats completed being removed
-                    totalWaitTime += process.getWaitingTime();//setting the new total wait time
-                    displayProcess(process,numberOfProcessIterations);
-                    numberOfProcessIterations = 0;//setting process iterations to 0, as the process has been completed
-                }
-            } else if (!tempProcessQueue.isEmpty())//if ready queue is empty than another process can now be executed
-                readyQueue.add(tempProcessQueue.poll());//moving process from temp queue to the ready queue
+                process.setCpuTime(process.getCpuTime() - 1);//decrementing the current processes cpu time("executing")
 
-            if (userInputQueue.isEmpty() && readyQueue.isEmpty() && tempProcessQueue.isEmpty())//end condition
-                break;
+                for (Process p : readyQueue)//increasing the wait time for all processes not executing
+                    p.setWaitingTime(p.getWaitingTime() + 1);
+
+                if (process.getCpuTime() == 0) {
+                    //if the process was complete, then the total time is increased with its wait time
+                    totalWaitTime += process.getWaitingTime();
+                    displayProcess(process.getProcessID(), numberOfProcessIterations);
+                    //setting process iterations to 0, as the process has been completed
+                    numberOfProcessIterations = 0;//setting process iterations to 0, as the process has been completed
+                    canCompute = false;
+                    if (userInputQueue.isEmpty() && readyQueue.isEmpty())//end condition
+                        break;
+                }
+            } else if (!readyQueue.isEmpty()) {
+                process = readyQueue.poll();//getting the "CPU" a process to execute
+                canCompute = true;
+            }
 
             currentTime++;
         }
 
-        System.out.println("");//formatting
-        averageWaitTime = totalWaitTime / getReadyQueueSize();
+        System.out.println();
+        averageWaitTime = (totalWaitTime - (getReadyQueueSize() - 1)) / getReadyQueueSize();
         System.out.println("Average Waiting Time: " + getDecimalFormat().format(averageWaitTime));
     }
 
     /**
-     * 
-     * @param process
-     * @param iteration
+     * Method is used to print out the process ID and the number of times the process executed
+     *
+     * @param processID <code>String</code> represents the process ID.
+     * @param iteration <code>int</code> represents number of times a process executed so far.
      */
-    protected void displayProcess(Process process, int iteration) {
-        System.out.print(" " + process.getProcessID() + iteration);
+    protected void displayProcess(String processID, int iteration) {
+        System.out.print(" " + processID + iteration);
     }
 
-    private void compute() {
-        this.readyQueue.peek().setCpuTime(this.readyQueue.peek().getCpuTime() - 1);
-    }
-
-    private Queue<String> deepCopy(String[] parsedUserInput){
+    /**
+     * Method is used to deep copy the user input <code>String[]</code> into a <code>Queue<String></code>.
+     *
+     * @param parsedUserInput <code>String[]</code> represents the parsed user input, which itself should contain
+     *                        the arrival and cpu burst time of each process.
+     * @return <code>Queue<String></code> representing the user input as a queue
+     */
+    private Queue<String> deepCopy(String[] parsedUserInput) {
         Queue<String> tempQueue = new LinkedList<>();
         tempQueue.addAll(Arrays.asList(parsedUserInput));
         return tempQueue;
     }
 
+    /**
+     * Abstract method is used to (sudo)simulate a basic CPU scheduler. Simulation consists of a loop that repeats once
+     * for each unit of time (single <code>int</code>). If a process is arriving at the current time, it is put into
+     * the ready queue. When a process finishes executing, it is removed from the system and another is taken from
+     * the queue (if not empty). Each time a process is being "executed", the CPU time of the process simply gets
+     * decremented by one. Method will also keep track of the total waiting time for all processes (in order to compute
+     * the average when the simulation ends and displays it).
+     */
     abstract void simulation();
 
+    /**
+     * Abstract method returns a comparator for the process object.
+     *
+     * @return <code>Comparator<Process></code>
+     */
     abstract Comparator<Process> comparator();
 }
